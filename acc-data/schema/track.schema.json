@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/acc-calc/acc-calc-data/schema/track.schema.json",
+  "title": "ACC Track",
+  "description": "Schema para definição de pista do Assetto Corsa Competizione",
+  "type": "object",
+  "required": ["id", "name", "country", "length_m", "min_pit_time_seconds"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Identificador kebab-case, ex: monza, spa, brands-hatch"
+    },
+    "name": { "type": "string", "minLength": 3, "maxLength": 80 },
+    "country": { "type": "string" },
+    "length_m": {
+      "type": "number",
+      "minimum": 1500,
+      "maximum": 7500,
+      "description": "Comprimento em metros — sanity range para circuitos GT3 viáveis"
+    },
+    "sectors": { "type": "integer", "enum": [3] },
+    "min_pit_time_seconds": {
+      "type": "number",
+      "minimum": 25,
+      "maximum": 50,
+      "description": "Tempo mínimo de pit obrigatório (regulamento ACC)"
+    },
+    "formation_lap_seconds": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 200,
+      "description": "Tempo da volta de formação (incluído na duração total da corrida)"
+    },
+    "typical_lap_time_gt3_seconds": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 240,
+      "description": "Lap time GT3 médio em qualifying (referência, não fixo)"
+    },
+    "surface_grip_evolution_pct_per_session": {
+      "type": "object",
+      "properties": {
+        "practice": { "type": "number", "minimum": 0, "maximum": 30 },
+        "qualifying": { "type": "number", "minimum": 0, "maximum": 30 },
+        "race": { "type": "number", "minimum": 0, "maximum": 30 }
+      },
+      "additionalProperties": false,
+      "description": "Evolução de grip durante sessão (% sobre baseline)"
+    },
+    "weather_profile": {
+      "type": "string",
+      "enum": ["temperate_continental", "mediterranean", "oceanic", "alpine", "tropical"]
+    }
+  },
+  "additionalProperties": false
+}

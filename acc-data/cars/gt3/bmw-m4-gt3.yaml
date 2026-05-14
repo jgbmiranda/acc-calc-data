@@ -1,0 +1,40 @@
+# BMW M4 GT3 — Reference data for acc-calc
+# Source: Kunos changelog + comunidade ACC (Reddit r/ACCompetizione)
+# Last verified: 2026-05-08 against ACC v1.10.x baseline
+
+id: bmw-m4-gt3
+name: "BMW M4 GT3"
+class: gt3
+manufacturer: BMW
+model: "M4 GT3"
+year: 2022
+tank_capacity_l: 110
+weight_kg: 1300
+power_kw: 430
+tire_compounds:
+  - dhe2
+
+# Consumo baseline em L/volta (referência inicial — usuário pode override)
+fuel_consumption_baseline_l_per_lap_by_track:
+  monza: 2.7
+  spa: 3.4
+  imola: 2.3
+  nurburgring-gp: 2.5
+  brands-hatch: 2.1
+  silverstone: 2.9
+  paul-ricard: 2.6
+  hungaroring: 2.0
+  zandvoort: 2.2
+  misano: 2.1
+
+# Balance of Performance (snapshot — Kunos atualiza por patch)
+bop_by_track:
+  monza:
+    weight_adjustment_kg: 0
+    power_adjustment_pct: 0
+  spa:
+    weight_adjustment_kg: 5
+    power_adjustment_pct: -1
+  imola:
+    weight_adjustment_kg: 0
+    power_adjustment_pct: 0

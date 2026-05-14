@@ -1,0 +1,17 @@
+# Monza — Autodromo Nazionale Monza
+# Source: SRO regulations + comunidade ACC
+
+id: monza
+name: "Autodromo Nazionale Monza"
+country: Italy
+length_m: 5793
+sectors: 3
+min_pit_time_seconds: 33
+formation_lap_seconds: 95
+typical_lap_time_gt3_seconds: 108
+weather_profile: temperate_continental
+
+surface_grip_evolution_pct_per_session:
+  practice: 5
+  qualifying: 8
+  race: 10

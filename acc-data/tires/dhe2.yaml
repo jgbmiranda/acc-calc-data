@@ -1,0 +1,25 @@
+# DHE2 — Pirelli slick GT3 default
+# Source: comunidade ACC + Kunos docs
+
+id: dhe2
+name: "Pirelli DHE2 (slick GT3)"
+type: slick
+manufacturer: Pirelli
+
+optimal_pressure_psi:
+  min: 26.5
+  max: 27.5
+  target: 27.0
+
+pressure_delta_cold_to_hot_psi:
+  default: 1.5
+  by_temp:
+    cold_5_15c: 2.0
+    moderate_15_25c: 1.5
+    hot_25_35c: 1.0
+
+degradation_curve:
+  laps_optimal: 15
+  laps_acceptable: 25
+  laps_cliff: 30
+  delta_per_lap_after_optimal_seconds: 0.05

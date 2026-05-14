@@ -1,0 +1,77 @@
+name: Validate ACC Data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: YAML against JSON Schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install validators
+        run: npm install --no-save ajv@8 ajv-formats@3 js-yaml@4
+
+      - name: Validate all YAMLs
+        run: |
+          set -euo pipefail
+          node <<'EOF'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const yaml = require('js-yaml');
+          const Ajv = require('ajv');
+          const addFormats = require('ajv-formats').default ?? require('ajv-formats');
+
+          const ajv = new Ajv({ allErrors: true, strict: false });
+          addFormats(ajv);
+
+          const types = [
+            { dir: 'acc-data/cars',   schema: 'acc-data/schema/car.schema.json'   },
+            { dir: 'acc-data/tracks', schema: 'acc-data/schema/track.schema.json' },
+            { dir: 'acc-data/tires',  schema: 'acc-data/schema/tire.schema.json'  },
+          ];
+
+          let failures = 0;
+          for (const { dir, schema } of types) {
+            if (!fs.existsSync(dir)) continue;
+            const validate = ajv.compile(JSON.parse(fs.readFileSync(schema, 'utf8')));
+            const files = [];
+            (function walk(p) {
+              for (const e of fs.readdirSync(p, { withFileTypes: true })) {
+                const full = path.join(p, e.name);
+                if (e.isDirectory()) walk(full);
+                else if (/\.ya?ml$/.test(e.name)) files.push(full);
+              }
+            })(dir);
+
+            for (const file of files) {
+              const data = yaml.load(fs.readFileSync(file, 'utf8'));
+              if (validate(data)) {
+                console.log(`✓ ${file}`);
+              } else {
+                failures++;
+                console.error(`✗ ${file}`);
+                for (const err of validate.errors) {
+                  console.error(`    ${err.instancePath || '/'} ${err.message}`);
+                }
+              }
+            }
+          }
+
+          if (failures > 0) {
+            console.error(`\n${failures} file(s) failed validation.`);
+            process.exit(1);
+          }
+          console.log('\nAll YAMLs valid.');
+          EOF

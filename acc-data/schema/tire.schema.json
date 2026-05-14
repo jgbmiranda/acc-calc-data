@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/acc-calc/acc-calc-data/schema/tire.schema.json",
+  "title": "ACC Tire Compound",
+  "description": "Schema para definição de composto de pneu do Assetto Corsa Competizione",
+  "type": "object",
+  "required": ["id", "name", "type", "optimal_pressure_psi", "pressure_delta_cold_to_hot_psi"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["slick", "wet"]
+    },
+    "manufacturer": { "type": "string" },
+    "optimal_pressure_psi": {
+      "type": "object",
+      "required": ["min", "max", "target"],
+      "properties": {
+        "min": { "type": "number", "minimum": 20, "maximum": 35 },
+        "max": { "type": "number", "minimum": 20, "maximum": 35 },
+        "target": { "type": "number", "minimum": 20, "maximum": 35 }
+      },
+      "additionalProperties": false
+    },
+    "pressure_delta_cold_to_hot_psi": {
+      "type": "object",
+      "required": ["default"],
+      "properties": {
+        "default": { "type": "number", "minimum": 0.5, "maximum": 3.5 },
+        "by_temp": {
+          "type": "object",
+          "patternProperties": {
+            "^(cold|moderate|hot)_\\d+_\\d+c$": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 3.5
+            }
+          },
+          "additionalProperties": false,
+          "description": "Delta por faixa de temp ambiente: cold_5_15c, moderate_15_25c, hot_25_35c"
+        }
+      },
+      "additionalProperties": false
+    },
+    "degradation_curve": {
+      "type": "object",
+      "properties": {
+        "laps_optimal": { "type": "integer", "minimum": 1, "maximum": 60 },
+        "laps_acceptable": { "type": "integer", "minimum": 1, "maximum": 80 },
+        "laps_cliff": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "delta_per_lap_after_optimal_seconds": { "type": "number", "minimum": 0, "maximum": 0.5 }
+      },
+      "additionalProperties": false,
+      "description": "Modelo de degradação para FR-9"
+    }
+  },
+  "additionalProperties": false
+}

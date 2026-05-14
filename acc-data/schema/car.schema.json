@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/acc-calc/acc-calc-data/schema/car.schema.json",
+  "title": "ACC Car",
+  "description": "Schema para definição de carro do Assetto Corsa Competizione",
+  "type": "object",
+  "required": ["id", "name", "class", "manufacturer", "tank_capacity_l", "weight_kg", "tire_compounds"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Identificador kebab-case, ex: bmw-m4-gt3"
+    },
+    "name": { "type": "string", "minLength": 3, "maxLength": 80 },
+    "class": {
+      "type": "string",
+      "enum": ["gt3", "gt4", "tcx", "challenge", "porsche-cup", "ferrari-challenge", "lamborghini-st"]
+    },
+    "manufacturer": { "type": "string" },
+    "model": { "type": "string" },
+    "year": { "type": "integer", "minimum": 2010, "maximum": 2030 },
+    "tank_capacity_l": {
+      "type": "number",
+      "minimum": 50,
+      "maximum": 135,
+      "description": "Litros — sanity range para GT3/GT4"
+    },
+    "weight_kg": {
+      "type": "number",
+      "minimum": 1100,
+      "maximum": 1500
+    },
+    "power_kw": { "type": "number", "minimum": 200, "maximum": 600 },
+    "tire_compounds": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "minItems": 1,
+      "description": "IDs dos compostos compatíveis (ref: tires/<id>.yaml)"
+    },
+    "fuel_consumption_baseline_l_per_lap_by_track": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9-]+$": { "type": "number", "minimum": 0.5, "maximum": 6.0 }
+      },
+      "additionalProperties": false,
+      "description": "Consumo baseline por pista (L/volta). Override por user em config_json."
+    },
+    "bop_by_track": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9-]+$": {
+          "type": "object",
+          "properties": {
+            "weight_adjustment_kg": { "type": "number", "minimum": -50, "maximum": 50 },
+            "power_adjustment_pct": { "type": "number", "minimum": -10, "maximum": 10 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "description": "Balance of Performance por pista (Kunos atualiza por patch — NFR-14)"
+    }
+  },
+  "additionalProperties": false
+}
