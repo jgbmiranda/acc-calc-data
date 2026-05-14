@@ -30,10 +30,10 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const yaml = require('js-yaml');
-          const Ajv = require('ajv');
+          const Ajv2020 = require('ajv/dist/2020').default ?? require('ajv/dist/2020');
           const addFormats = require('ajv-formats').default ?? require('ajv-formats');
 
-          const ajv = new Ajv({ allErrors: true, strict: false });
+          const ajv = new Ajv2020({ allErrors: true, strict: false });
           addFormats(ajv);
 
           const types = [
